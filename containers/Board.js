@@ -1,6 +1,7 @@
 import React from 'react';
 import {Range} from 'immutable';
 import Box from '../components/Box';
+import {getHexColor} from '../helpers'
 import './Board.scss';
 
 export default class Board extends React.Component {
@@ -17,12 +18,14 @@ export default class Board extends React.Component {
             let boxPercentage = 100 / this.props.gridSize;
             let boxWidth = (boxPercentage - 0.1 * boxPercentage).toFixed(0);
             let boxContainerStyle = {flex: `0 0 ${boxWidth}%`};
+            let boxColor = getHexColor(boxNo);
 
             return (
                 <Box
                     key={boxNo}
                     containerClass="Board-box"
-                    containerStyle={boxContainerStyle} />
+                    containerStyle={boxContainerStyle}
+                    color={boxColor} />
             );
         });
     }
