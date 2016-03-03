@@ -1,0 +1,14 @@
+.Board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 750px;
+    margin: 0 auto;
+    min-width: 300px;
+    position: relative;
+    width: 50%;
+}
+.Board-box {
+    height: 100px;
+    margin: 10px 0;
+}
