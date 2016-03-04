@@ -1,31 +1,24 @@
 import React from 'react';
-import {Range} from 'immutable';
+import {connect} from 'react-redux'
 import Box from '../components/Box';
-import {getHexColor} from '../helpers'
 import './Board.scss';
 
-export default class Board extends React.Component {
-    static propTypes = {
-        gridSize: React.PropTypes.number
-    }
-
-    static defaultProps = {
-        gridSize: 3
-    }
-
+class Board extends React.Component {
     _getBoxes() {
-        return Range(0, this.props.gridSize ** 2).map((v, boxNo) => {
-            let boxPercentage = 100 / this.props.gridSize;
+        let {boxes} = this.props;
+        let gridSize = Math.sqrt(boxes.size);
+
+        return boxes.map((boxInfo, boxNo) => {
+            let boxPercentage = 100 / gridSize;
             let boxWidth = (boxPercentage - 0.1 * boxPercentage).toFixed(0);
             let boxContainerStyle = {flex: `0 0 ${boxWidth}%`};
-            let boxColor = getHexColor(boxNo);
 
             return (
                 <Box
                     key={boxNo}
                     containerClass="Board-box"
                     containerStyle={boxContainerStyle}
-                    color={boxColor} />
+                    color={boxInfo.color} />
             );
         });
     }
@@ -38,3 +31,13 @@ export default class Board extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    boxes: state.boxes
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(Board)
