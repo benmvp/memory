@@ -1,4 +1,4 @@
-.Board {
+.Board__boxes {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -11,4 +11,8 @@
 .Board-box {
     height: 100px;
     margin: 10px 0;
+}
+.Board__actions {
+    padding: 10px;
+    text-align: center;
 }

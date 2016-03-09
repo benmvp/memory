@@ -8,7 +8,7 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Board gridSize={this.props.gridSize} />
+            <Board />
         );
     }
 }

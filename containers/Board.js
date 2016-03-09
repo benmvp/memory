@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import Box from '../components/Box';
+import {addToSequence} from '../actions';
 import './Board.scss';
 
 class Board extends React.Component {
     _getBoxes() {
         let {boxes} = this.props;
-        let gridSize = Math.sqrt(boxes.size);
+        let gridSize = Math.sqrt(boxes.length);
 
         return boxes.map((boxInfo, boxNo) => {
             let boxPercentage = 100 / gridSize;
@@ -18,26 +19,46 @@ class Board extends React.Component {
                     key={boxNo}
                     containerClass="Board-box"
                     containerStyle={boxContainerStyle}
-                    color={boxInfo.color} />
+                    color={boxInfo.color}
+                    isActive={boxInfo.isActive} />
             );
         });
     }
 
     render() {
+        let goButtonProps = {
+            onClick: this.props.onNextRound.bind(this)
+        };
+
+        if (this.props.playing)
+            goButtonProps.disabled = 'disabled';
+
         return (
             <div className="Board">
-                {this._getBoxes()}
+                <div className="Board__boxes">
+                    {this._getBoxes()}
+                </div>
+                <div className="Board__actions">
+                    <button {...goButtonProps}>GO!</button>
+                </div>
             </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-  return {
-    boxes: state.boxes
-  }
-}
+    return state.toJS();
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onNextRound: () => {
+            dispatch(addToSequence());
+        }
+    }
+};
 
 export default connect(
-  mapStateToProps
-)(Board)
+    mapStateToProps,
+    mapDispatchToProps
+)(Board);
