@@ -13,8 +13,11 @@ export const buildBoard = gridSize => ({
     }
 });
 
-export const addToSequence = () => ({
-    type: ADD_TO_SEQUENCE
+export const addToSequence = gridSize => ({
+    type: ADD_TO_SEQUENCE,
+    payload: {
+        next: Math.floor(Math.random() * gridSize)
+    }
 });
 
 export const playSequence = () => ({
@@ -24,3 +27,11 @@ export const playSequence = () => ({
 export const stopSequence = () => ({
     type: STOP_SEQUENCE
 });
+
+export const nextSequence = () => {
+    // async action leveraging redux thunk middleware
+    return dispatch => {
+        // dispatch action to add to the sequence
+        dispatch(addToSequence());
+    };
+};

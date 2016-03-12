@@ -7,7 +7,7 @@ import './Board.scss';
 class Board extends React.Component {
     _getBoxes() {
         let {boxes} = this.props;
-        let gridSize = Math.sqrt(boxes.length);
+        let gridSize = Math.sqrt(boxes.size);
 
         return boxes.map((boxInfo, boxNo) => {
             let boxPercentage = 100 / gridSize;
@@ -27,7 +27,7 @@ class Board extends React.Component {
 
     render() {
         let goButtonProps = {
-            onClick: this.props.onNextRound.bind(this)
+            onClick: this.props.onNextRound.bind(this, this.props.boxes.size)
         };
 
         if (this.props.playing)
@@ -46,17 +46,15 @@ class Board extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return state.toJS();
-};
+const mapStateToProps = state => state;
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onNextRound: () => {
-            dispatch(addToSequence());
+const mapDispatchToProps = dispatch => (
+    {
+        onNextRound: gridSize => {
+            dispatch(addToSequence(gridSize));
         }
     }
-};
+);
 
 export default connect(
     mapStateToProps,
