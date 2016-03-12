@@ -1,13 +1,30 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import Box from '../components/Box';
-import {addToSequence} from '../actions';
+import {nextActiveBox, clearActiveBox} from '../actions';
 import './Board.scss';
 
 class Board extends React.Component {
+    state = {
+        animTime: 2000 // To be configured in UI as "difficulty"
+    }
+
+    componentDidUpdate() {
+        let {sequence, sequenceNo} = this.props;
+
+        if (sequenceNo < 0 || sequenceNo >= sequence.size) {
+            clearInterval(this._playIntervalId);
+
+            if (sequenceNo !== -1) {
+                this.props.clearActiveBox();
+            }
+        }
+    }
+
     _getBoxes() {
-        let {boxes} = this.props;
+        let {boxes, sequence, sequenceNo} = this.props;
         let gridSize = Math.sqrt(boxes.size);
+        let activeBoxNo = sequenceNo > -1 ? sequence.get(sequenceNo) : -1;
 
         return boxes.map((boxInfo, boxNo) => {
             let boxPercentage = 100 / gridSize;
@@ -20,17 +37,31 @@ class Board extends React.Component {
                     containerClass="Board-box"
                     containerStyle={boxContainerStyle}
                     color={boxInfo.color}
-                    isActive={boxInfo.isActive} />
+                    isActive={boxNo === activeBoxNo} />
             );
         });
     }
 
-    render() {
-        let goButtonProps = {
-            onClick: this.props.onNextRound.bind(this, this.props.boxes.size)
+    _playSequence() {
+        let next = () => {
+            if (this.props.sequenceNo < (this.props.sequence.size - 1)) {
+                this.props.nextActiveBox();
+            }
+            else {
+                this.props.clearActiveBox();
+            }
         };
 
-        if (this.props.playing)
+        this._playIntervalId = setInterval(next, this.state.animTime);
+        next();
+    }
+
+    render() {
+        let goButtonProps = {
+            onClick: this._playSequence.bind(this)
+        };
+
+        if (this.props.sequenceNo > -1)
             goButtonProps.disabled = 'disabled';
 
         return (
@@ -46,15 +77,13 @@ class Board extends React.Component {
     }
 }
 
+// Pass all redux state as props to Board
 const mapStateToProps = state => state;
 
-const mapDispatchToProps = dispatch => (
-    {
-        onNextRound: gridSize => {
-            dispatch(addToSequence(gridSize));
-        }
-    }
-);
+const mapDispatchToProps = dispatch => ({
+    nextActiveBox: () => dispatch(nextActiveBox()),
+    clearActiveBox: () => dispatch(clearActiveBox())
+});
 
 export default connect(
     mapStateToProps,

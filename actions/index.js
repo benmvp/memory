@@ -1,37 +1,32 @@
 // Action type constants
 export const BUILD_BOARD = 'BUILD_BOARD';
 export const ADD_TO_SEQUENCE = 'ADD_TO_SEQUENCE';
-export const PLAY_SEQUENCE = 'PLAY_SEQUENCE';
-export const STOP_SEQUENCE = 'STOP_SEQUENCE';
-export const NEXT_SEQUENCE = 'NEXT_SEQUENCE';
+export const NEXT_ACTIVE_BOX = 'NEXT_ACTIVE_BOX';
+export const CLEAR_ACTIVE_BOX = 'CLEAR_ACTIVE_BOX';
+
+// Helpers
+const randomBoxId = (gridSize) => Math.floor(Math.random() * gridSize);
 
 // Action creators
-export const buildBoard = gridSize => ({
+export const buildBoard = (gridSize) => ({
     type: BUILD_BOARD,
     payload: {
-        gridSize
+        gridSize,
+        initial: randomBoxId(gridSize)
     }
 });
 
-export const addToSequence = gridSize => ({
+export const addToSequence = (gridSize) => ({
     type: ADD_TO_SEQUENCE,
     payload: {
-        next: Math.floor(Math.random() * gridSize)
+        next: randomBoxId(gridSize)
     }
 });
 
-export const playSequence = () => ({
-    type: PLAY_SEQUENCE
+export const nextActiveBox = () => ({
+    type: NEXT_ACTIVE_BOX
 });
 
-export const stopSequence = () => ({
-    type: STOP_SEQUENCE
+export const clearActiveBox = (boxId) => ({
+    type: CLEAR_ACTIVE_BOX
 });
-
-export const nextSequence = () => {
-    // async action leveraging redux thunk middleware
-    return dispatch => {
-        // dispatch action to add to the sequence
-        dispatch(addToSequence());
-    };
-};

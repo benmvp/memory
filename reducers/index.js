@@ -6,8 +6,7 @@ import {getHexColor} from '../helpers';
 const boxes = (state = new List(), {type, payload}) => {
     if (type == Actions.BUILD_BOARD) {
         state = Range(0, payload.gridSize ** 2).map((v, boxNo) => ({
-            color: getHexColor(boxNo),
-            isActive: boxNo % 5 == 0 // TODO: Remove
+            color: getHexColor(boxNo)
         }));
     }
 
@@ -15,19 +14,28 @@ const boxes = (state = new List(), {type, payload}) => {
 };
 
 const sequence = (state = new List(), {type, payload}) => {
-    if (type == Actions.ADD_TO_SEQUENCE) {
+    if (type == Actions.BUILD_BOARD) {
+        state = List.of(payload.initial);
+    }
+    else if (type == Actions.ADD_TO_SEQUENCE) {
         state = state.push(payload.next);
     }
 
     return state;
 };
 
-const playing = (state, {type}) => {
-    return type == Actions.ADD_TO_SEQUENCE || type == Actions.START_PLAYING;
+const sequenceNo = (state = -1, {type, payload}) => {
+    if (type == Actions.NEXT_ACTIVE_BOX) {
+        state = state + 1;
+    }
+    else if (type == Actions.CLEAR_ACTIVE_BOX) {
+        state = -1;
+    }
+    return state;
 };
 
 export default combineReducers({
     boxes,
     sequence,
-    playing
+    sequenceNo
 });
