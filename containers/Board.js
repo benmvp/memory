@@ -1,10 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux'
+import classNames from 'classnames';
 import Box from '../components/Box';
 import {nextActiveBox, clearActiveBox} from '../actions';
 import './Board.scss';
 
 class Board extends React.Component {
+    static propTypes = {
+        boxes: React.PropTypes.object.isRequired,
+        clearActiveBox: React.PropTypes.func.isRequired,
+        nextActiveBox: React.PropTypes.func.isRequired,
+        sequence: React.PropTypes.object.isRequired,
+        sequenceNo: React.PropTypes.number.isRequired
+    }
+
     state = {
         animTime: 2000 // To be configured in UI as "difficulty"
     }
@@ -21,10 +30,13 @@ class Board extends React.Component {
         }
     }
 
-    _getBoxes() {
-        let {boxes, sequence, sequenceNo} = this.props;
+    _onBoxSelect(boxNo) {
+        console.log('box clicked!', boxNo);
+    }
+
+    _getBoxes({boxes, sequence, sequenceNo, isPlaying}) {
         let gridSize = Math.sqrt(boxes.size);
-        let activeBoxNo = sequenceNo > -1 ? sequence.get(sequenceNo) : -1;
+        let activeBoxNo = isPlaying ? sequence.get(sequenceNo) : -1;
 
         return boxes.map((boxInfo, boxNo) => {
             let boxPercentage = 100 / gridSize;
@@ -34,10 +46,12 @@ class Board extends React.Component {
             return (
                 <Box
                     key={boxNo}
-                    containerClass="Board-box"
+                    containerClass="Board__box"
                     containerStyle={boxContainerStyle}
                     color={boxInfo.color}
-                    isActive={boxNo === activeBoxNo} />
+                    isActive={boxNo === activeBoxNo}
+                    isPlaying={isPlaying}
+                    onSelect={this._onBoxSelect.bind(this, boxNo)} />
             );
         });
     }
@@ -57,20 +71,31 @@ class Board extends React.Component {
     }
 
     render() {
-        let goButtonProps = {
+        let {boxes, sequence, sequenceNo} = this.props;
+        let isPlaying = sequenceNo > -1;
+        let boardClasses = classNames(
+            'Board',
+            {
+                'Board--playing': isPlaying
+            }
+        );
+        let playButtonProps = {
             onClick: this._playSequence.bind(this)
         };
+        let playButtonText = sequence.size <= 1
+            ? 'START!'
+            : 'NEXT!';
 
-        if (this.props.sequenceNo > -1)
-            goButtonProps.disabled = 'disabled';
+        if (isPlaying)
+            playButtonProps.disabled = 'disabled';
 
         return (
-            <div className="Board">
+            <div className={boardClasses}>
                 <div className="Board__boxes">
-                    {this._getBoxes()}
+                    {this._getBoxes({boxes, sequence, sequenceNo, isPlaying})}
                 </div>
                 <div className="Board__actions">
-                    <button {...goButtonProps}>GO!</button>
+                    <button {...playButtonProps}>{playButtonText}</button>
                 </div>
             </div>
         );

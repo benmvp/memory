@@ -7,25 +7,33 @@ export default class Square extends React.Component {
         containerClass: React.PropTypes.string,
         containerStyle: React.PropTypes.object,
         color: React.PropTypes.string.isRequired,
-        isActive: React.PropTypes.bool
+        isActive: React.PropTypes.bool.isRequired,
+        isPlaying: React.PropTypes.bool.isRequired,
+        onSelect: React.PropTypes.func.isRequired
     }
 
     static defaultProps = {
-        isActive: false
+        isActive: false,
+        isPlaying: false
     }
 
     render() {
         let containerClass = classNames(
             'Box',
-            this.props.isActive ? 'Box--isActive' : undefined,
+            {
+                'Box--isActive': this.props.isActive,
+                'Box--isPlaying': this.props.isPlaying
+            },
             this.props.containerClass);
         let containerStyle = {
             ...this.props.containerStyle,
             background: `#${this.props.color}`
-        }
+        };
 
         return (
-            <div className={containerClass} style={containerStyle} />
+            <div className={containerClass}
+                style={containerStyle}
+                onClick={this.props.onSelect} />
         );
     }
 }

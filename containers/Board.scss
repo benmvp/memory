@@ -1,3 +1,6 @@
+.Board--playing {
+    cursor: wait;
+}
 .Board__boxes {
     display: flex;
     flex-wrap: wrap;
@@ -8,7 +11,7 @@
     position: relative;
     width: 100%;
 }
-.Board-box {
+.Board__box {
     height: 100px;
     margin: 10px 0;
 }

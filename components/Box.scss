@@ -3,6 +3,19 @@
     border-radius: 10px;
     box-sizing: border-box;
     opacity: .25;
+    transition: opacity 200ms;
+
+    &:not(.Box--isPlaying) {
+        cursor: pointer;
+
+        &:hover {
+            opacity: .5;
+        },
+
+        &:active {
+            /* inner shadow (depressed) */
+        }
+    }
 }
 .Box--isActive {
     opacity: 1;
