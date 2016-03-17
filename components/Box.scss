@@ -1,22 +1,25 @@
-.Box {
-    border: 3px solid #222;
+$box-border-color: #222;
+
+.box {
+    border: 3px solid $box-border-color;
     border-radius: 10px;
     box-sizing: border-box;
     opacity: .25;
     transition: opacity 200ms;
 
-    &:not(.Box--isPlaying) {
+    &:not(.box--is-playing) {
         cursor: pointer;
 
         &:hover {
             opacity: .5;
-        },
+        }
 
         &:active {
-            /* inner shadow (depressed) */
+            // inner shadow (depressed)
         }
     }
 }
-.Box--isActive {
+
+.box--is-active {
     opacity: 1;
 }

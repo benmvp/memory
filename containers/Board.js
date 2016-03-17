@@ -46,7 +46,7 @@ class Board extends React.Component {
             return (
                 <Box
                     key={boxNo}
-                    containerClass="Board__box"
+                    containerClass="board__box"
                     containerStyle={boxContainerStyle}
                     color={boxInfo.color}
                     isActive={boxNo === activeBoxNo}
@@ -74,9 +74,9 @@ class Board extends React.Component {
         let {boxes, sequence, sequenceNo} = this.props;
         let isPlaying = sequenceNo > -1;
         let boardClasses = classNames(
-            'Board',
+            'board',
             {
-                'Board--playing': isPlaying
+                'board--playing': isPlaying
             }
         );
         let playButtonProps = {
@@ -91,10 +91,10 @@ class Board extends React.Component {
 
         return (
             <div className={boardClasses}>
-                <div className="Board__boxes">
+                <div className="board__boxes">
                     {this._getBoxes({boxes, sequence, sequenceNo, isPlaying})}
                 </div>
-                <div className="Board__actions">
+                <div className="board__actions">
                     <button {...playButtonProps}>{playButtonText}</button>
                 </div>
             </div>

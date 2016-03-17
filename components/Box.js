@@ -19,10 +19,10 @@ export default class Square extends React.Component {
 
     render() {
         let containerClass = classNames(
-            'Box',
+            'box',
             {
-                'Box--isActive': this.props.isActive,
-                'Box--isPlaying': this.props.isPlaying
+                'box--is-active': this.props.isActive,
+                'box--is-playing': this.props.isPlaying
             },
             this.props.containerClass);
         let containerStyle = {

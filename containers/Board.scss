@@ -1,21 +1,24 @@
-.Board--playing {
+.board--playing {
     cursor: wait;
 }
-.Board__boxes {
+
+.board__boxes {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    max-width: 750px;
     margin: 0 auto;
+    max-width: 750px;
     min-width: 300px;
     position: relative;
     width: 100%;
 }
-.Board__box {
+
+.board__box {
     height: 100px;
     margin: 10px 0;
 }
-.Board__actions {
+
+.board__actions {
     padding: 10px;
     text-align: center;
 }

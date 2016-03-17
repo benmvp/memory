@@ -7,6 +7,8 @@
     "start": "serve",
     "build": "webpack --progress --colors",
     "build-watch": "webpack --progress --colors --watch --devtool source-map",
+    "lint": "scss-lint",
+    "scss-lint": "scss-lint ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
