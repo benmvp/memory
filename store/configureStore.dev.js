@@ -3,7 +3,7 @@ import createLogger from 'redux-logger';
 import {Map} from 'immutable';
 import rootReducer from '../reducers';
 
-const stateTransformer = state => (
+const stateTransformer = (state) => (
     Map(state).toJS()
 );
 const logger = createLogger({
@@ -11,9 +11,9 @@ const logger = createLogger({
 });
 
 export default function configureStore(initialState) {
-  return createStore(
-    rootReducer,
-    initialState,
-    applyMiddleware(logger)
-  )
-};
+    return createStore(
+        rootReducer,
+        initialState,
+        applyMiddleware(logger)
+    );
+}

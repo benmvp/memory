@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
 import classNames from 'classnames';
 import Box from '../components/Box';
 import {nextActiveBox, clearActiveBox} from '../actions';
@@ -86,8 +86,9 @@ class Board extends React.Component {
             ? 'START!'
             : 'NEXT!';
 
-        if (isPlaying)
+        if (isPlaying) {
             playButtonProps.disabled = 'disabled';
+        }
 
         return (
             <div className={boardClasses}>
@@ -103,9 +104,9 @@ class Board extends React.Component {
 }
 
 // Pass all redux state as props to Board
-const mapStateToProps = state => state;
+const mapStateToProps = (state) => state;
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     nextActiveBox: () => dispatch(nextActiveBox()),
     clearActiveBox: () => dispatch(clearActiveBox())
 });

@@ -4,8 +4,8 @@ import {List, Range} from 'immutable';
 import {getHexColor} from '../helpers';
 
 const boxes = (state = new List(), {type, payload}) => {
-    if (type == Actions.BUILD_BOARD) {
-        state = Range(0, payload.gridSize ** 2).map((v, boxNo) => ({
+    if (type === Actions.BUILD_BOARD) {
+        return Range(0, payload.gridSize ** 2).map((v, boxNo) => ({
             color: getHexColor(boxNo)
         }));
     }
@@ -14,22 +14,22 @@ const boxes = (state = new List(), {type, payload}) => {
 };
 
 const sequence = (state = new List(), {type, payload}) => {
-    if (type == Actions.BUILD_BOARD) {
-        state = List.of(payload.initial);
+    if (type === Actions.BUILD_BOARD) {
+        return List.of(payload.boxId);
     }
-    else if (type == Actions.ADD_TO_SEQUENCE) {
-        state = state.push(payload.next);
+    else if (type === Actions.ADD_TO_SEQUENCE) {
+        return state.push(payload.boxId);
     }
 
     return state;
 };
 
-const sequenceNo = (state = -1, {type, payload}) => {
-    if (type == Actions.NEXT_ACTIVE_BOX) {
-        state = state + 1;
+const sequenceNo = (state = -1, {type}) => {
+    if (type === Actions.NEXT_ACTIVE_BOX) {
+        return state + 1;
     }
-    else if (type == Actions.CLEAR_ACTIVE_BOX) {
-        state = -1;
+    else if (type === Actions.CLEAR_ACTIVE_BOX) {
+        return -1;
     }
     return state;
 };
