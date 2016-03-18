@@ -48,6 +48,7 @@
         "react/jsx-key": 2,
         "react/prefer-es6-class": 2,
         "react/sort-comp": 2,
+        "space-before-blocks": 2,
         "semi": 2
     }
 }

@@ -1,21 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import Box from '../components/Box';
 import {nextActiveBox, clearActiveBox} from '../actions';
 import './Board.scss';
 
 class Board extends React.Component {
     static propTypes = {
-        boxes: React.PropTypes.object.isRequired,
+        addToUserSequence: React.PropTypes.func.isRequired,
+        boxes: ImmutablePropTypes.listOf(React.PropTypes.object).isRequired,
         clearActiveBox: React.PropTypes.func.isRequired,
         nextActiveBox: React.PropTypes.func.isRequired,
-        sequence: React.PropTypes.object.isRequired,
-        sequenceNo: React.PropTypes.number.isRequired
+        sequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
+        sequenceNo: React.PropTypes.number.isRequired,
+        userSequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired
     }
 
     state = {
-        animTime: 2000 // To be configured in UI as "difficulty"
+        animTime: 1000 // To be configured in UI as "difficulty"
     }
 
     componentDidUpdate() {
