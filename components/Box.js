@@ -1,6 +1,6 @@
-import React from 'react';
-import classNames from 'classnames';
 import './Box.scss';
+import classNames from 'classnames';
+import React from 'react';
 
 export default class Square extends React.Component {
     static propTypes = {

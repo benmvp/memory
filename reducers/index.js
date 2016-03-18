@@ -1,6 +1,6 @@
-import {combineReducers} from 'redux';
 import * as Actions from '../actions';
 import {List, Range} from 'immutable';
+import {combineReducers} from 'redux';
 import {getHexColor} from '../helpers';
 
 const boxes = (state = new List(), {type, payload}) => {

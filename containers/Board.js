@@ -1,10 +1,10 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import classNames from 'classnames';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import Box from '../components/Box';
-import {nextActiveBox, clearActiveBox, addToUserSequence} from '../actions';
 import './Board.scss';
+import {addToUserSequence, clearActiveBox, nextActiveBox} from '../actions';
+import Box from '../components/Box';
+import classNames from 'classnames';
+import {connect} from 'react-redux';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import React from 'react';
 
 class Board extends React.Component {
     static propTypes = {

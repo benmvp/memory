@@ -1,10 +1,9 @@
+import App from './containers/App';
+import {buildBoard} from './actions';
+import configureStore from './store/configureStore';
+import {Provider} from 'react-redux';
 import React from 'react';
 import {render} from 'react-dom';
-import {Provider} from 'react-redux';
-import configureStore from './store/configureStore';
-import {buildBoard} from './actions';
-
-import App from './containers/App';
 
 const store = configureStore();
 const GRID_SIZE = 4;

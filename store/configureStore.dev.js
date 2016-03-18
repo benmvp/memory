@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import createLogger from 'redux-logger';
 import {Map} from 'immutable';
 import rootReducer from '../reducers';
