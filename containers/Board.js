@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import classNames from 'classnames';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Box from '../components/Box';
-import {nextActiveBox, clearActiveBox} from '../actions';
+import {nextActiveBox, clearActiveBox, addToUserSequence} from '../actions';
 import './Board.scss';
 
 class Board extends React.Component {
@@ -33,8 +33,10 @@ class Board extends React.Component {
         }
     }
 
-    _onBoxSelect(boxNo) {
-        console.log('box clicked!', boxNo);
+    _onBoxSelect(boxNo, isPlaying) {
+        if (!isPlaying) {
+            this.props.addToUserSequence(boxNo);
+        }
     }
 
     _getBoxes({boxes, sequence, sequenceNo, isPlaying}) {
@@ -54,7 +56,7 @@ class Board extends React.Component {
                     color={boxInfo.color}
                     isActive={boxNo === activeBoxNo}
                     isPlaying={isPlaying}
-                    onSelect={this._onBoxSelect.bind(this, boxNo)} />
+                    onSelect={this._onBoxSelect.bind(this, boxNo, isPlaying)} />
             );
         });
     }
@@ -74,7 +76,7 @@ class Board extends React.Component {
     }
 
     render() {
-        let {boxes, sequence, sequenceNo} = this.props;
+        let {boxes, sequence, sequenceNo, userSequence} = this.props;
         let isPlaying = sequenceNo > -1;
         let boardClasses = classNames(
             'board',
@@ -85,9 +87,7 @@ class Board extends React.Component {
         let playButtonProps = {
             onClick: this._playSequence.bind(this)
         };
-        let playButtonText = sequence.size <= 1
-            ? 'START!'
-            : 'NEXT!';
+        let playButtonText = sequence.size <= 1 ? 'START!' : 'NEXT!';
 
         if (isPlaying) {
             playButtonProps.disabled = 'disabled';
@@ -110,6 +110,7 @@ class Board extends React.Component {
 const mapStateToProps = (state) => state;
 
 const mapDispatchToProps = (dispatch) => ({
+    addToUserSequence: (boxId) => dispatch(addToUserSequence(boxId)),
     nextActiveBox: () => dispatch(nextActiveBox()),
     clearActiveBox: () => dispatch(clearActiveBox())
 });

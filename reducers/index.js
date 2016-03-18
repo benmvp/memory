@@ -7,7 +7,7 @@ const boxes = (state = new List(), {type, payload}) => {
     if (type === Actions.BUILD_BOARD) {
         return Range(0, payload.gridSize ** 2).map((v, boxNo) => ({
             color: getHexColor(boxNo)
-        }));
+        })).toList();
     }
 
     return state;
@@ -34,8 +34,17 @@ const sequenceNo = (state = -1, {type}) => {
     return state;
 };
 
+const userSequence = (state = new List(), {type, payload}) => {
+    if (type === Actions.ADD_TO_USER_SEQUENCE) {
+        return state.push(payload.boxId);
+    }
+
+    return state;
+};
+
 export default combineReducers({
     boxes,
     sequence,
-    sequenceNo
+    sequenceNo,
+    userSequence
 });
