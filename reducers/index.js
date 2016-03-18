@@ -1,10 +1,10 @@
-import * as Actions from '../actions';
+import * as ActionTypes from '../actions';
 import {List, Range} from 'immutable';
 import {combineReducers} from 'redux';
 import {getHexColor} from '../helpers';
 
 const boxes = (state = new List(), {type, payload}) => {
-    if (type === Actions.BUILD_BOARD) {
+    if (type === ActionTypes.BUILD_BOARD) {
         return Range(0, payload.gridSize ** 2).map((v, boxNo) => ({
             color: getHexColor(boxNo)
         })).toList();
@@ -14,10 +14,10 @@ const boxes = (state = new List(), {type, payload}) => {
 };
 
 const sequence = (state = new List(), {type, payload}) => {
-    if (type === Actions.BUILD_BOARD) {
+    if (type === ActionTypes.BUILD_BOARD) {
         return List.of(payload.boxId);
     }
-    else if (type === Actions.ADD_TO_SEQUENCE) {
+    else if (type === ActionTypes.ADD_TO_SEQUENCE) {
         return state.push(payload.boxId);
     }
 
@@ -25,17 +25,17 @@ const sequence = (state = new List(), {type, payload}) => {
 };
 
 const sequenceNo = (state = -1, {type}) => {
-    if (type === Actions.NEXT_ACTIVE_BOX) {
+    if (type === ActionTypes.NEXT_ACTIVE_BOX) {
         return state + 1;
     }
-    else if (type === Actions.CLEAR_ACTIVE_BOX) {
+    else if (type === ActionTypes.CLEAR_ACTIVE_BOX) {
         return -1;
     }
     return state;
 };
 
 const userSequence = (state = new List(), {type, payload}) => {
-    if (type === Actions.ADD_TO_USER_SEQUENCE) {
+    if (type === ActionTypes.ADD_TO_USER_SEQUENCE) {
         return state.push(payload.boxId);
     }
 

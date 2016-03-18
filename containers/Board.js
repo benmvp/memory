@@ -107,13 +107,11 @@ class Board extends React.Component {
 }
 
 // Pass all redux state as props to Board
-const mapStateToProps = (state) => state;
-
-const mapDispatchToProps = (dispatch) => ({
-    addToUserSequence: (boxId) => dispatch(addToUserSequence(boxId)),
-    nextActiveBox: () => dispatch(nextActiveBox()),
-    clearActiveBox: () => dispatch(clearActiveBox())
+const mapStateToProps = (state) => ({
+    ...state
 });
+
+const mapDispatchToProps = {addToUserSequence, clearActiveBox, nextActiveBox};
 
 export default connect(
     mapStateToProps,
