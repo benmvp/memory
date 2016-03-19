@@ -1,8 +1,10 @@
 import './Board.scss';
-import {addToUserSequence, clearActiveBox, nextActiveBox} from '../actions';
+import {addToUserSequence, buildBoard, clearActiveBox, nextActiveBox} from '../actions';
 import Box from '../components/Box';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
+import GameOver from '../components/GameOver';
+import {getUserSequenceMatches} from '../selectors';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import React from 'react';
 
@@ -10,11 +12,15 @@ class Board extends React.Component {
     static propTypes = {
         addToUserSequence: React.PropTypes.func.isRequired,
         boxes: ImmutablePropTypes.listOf(React.PropTypes.object).isRequired,
+        buildBoard: React.PropTypes.func.isRequired,
         clearActiveBox: React.PropTypes.func.isRequired,
+        gridSize: React.PropTypes.number.isRequired,
+        isPlaying: React.PropTypes.bool.isRequired,
         nextActiveBox: React.PropTypes.func.isRequired,
         sequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
         sequenceNo: React.PropTypes.number.isRequired,
-        userSequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired
+        userSequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
+        userSequenceMatches: React.PropTypes.bool.isRequired
     }
 
     state = {
@@ -39,8 +45,7 @@ class Board extends React.Component {
         }
     }
 
-    _getBoxes({boxes, sequence, sequenceNo, isPlaying}) {
-        let gridSize = Math.sqrt(boxes.size);
+    _getBoxes({boxes, gridSize, isPlaying, sequence, sequenceNo}) {
         let activeBoxNo = isPlaying ? sequence.get(sequenceNo) : -1;
 
         return boxes.map((boxInfo, boxNo) => {
@@ -75,9 +80,12 @@ class Board extends React.Component {
         next();
     }
 
+    _handleRestart() {
+        this.props.buildBoard(this.props.gridSize);
+    }
+
     render() {
-        let {boxes, sequence, sequenceNo, userSequence} = this.props;
-        let isPlaying = sequenceNo > -1;
+        let {boxes, gridSize, isPlaying, sequence, sequenceNo, userSequenceMatches} = this.props;
         let boardClasses = classNames(
             'board',
             {
@@ -88,19 +96,27 @@ class Board extends React.Component {
             onClick: this._playSequence.bind(this)
         };
         let playButtonText = sequence.size <= 1 ? 'START!' : 'NEXT!';
+        let gameOverMessage;
 
         if (isPlaying) {
             playButtonProps.disabled = 'disabled';
         }
 
+        if (!userSequenceMatches) {
+            gameOverMessage = (
+                <GameOver onRestart={this._handleRestart.bind(this)} />
+            );
+        }
+
         return (
             <div className={boardClasses}>
                 <div className="board__boxes">
-                    {this._getBoxes({boxes, sequence, sequenceNo, isPlaying})}
+                    {this._getBoxes({boxes, gridSize, isPlaying, sequence, sequenceNo})}
                 </div>
                 <div className="board__actions">
                     <button {...playButtonProps}>{playButtonText}</button>
                 </div>
+                {gameOverMessage}
             </div>
         );
     }
@@ -108,10 +124,13 @@ class Board extends React.Component {
 
 // Pass all redux state as props to Board
 const mapStateToProps = (state) => ({
-    ...state
+    ...state,
+    gridSize: Math.sqrt(state.boxes.size),
+    isPlaying: state.sequenceNo > -1,
+    userSequenceMatches: getUserSequenceMatches(state.sequence, state.userSequence)
 });
 
-const mapDispatchToProps = {addToUserSequence, clearActiveBox, nextActiveBox};
+const mapDispatchToProps = {addToUserSequence, buildBoard, clearActiveBox, nextActiveBox};
 
 export default connect(
     mapStateToProps,

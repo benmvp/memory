@@ -1,0 +1,14 @@
+$semi-transparent-white: rgba(255, 255, 255, .75);
+
+.game-over {
+    align-items: center;
+    background: $semi-transparent-white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}

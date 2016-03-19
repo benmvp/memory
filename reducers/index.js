@@ -15,27 +15,31 @@ const boxes = (state = new List(), {type, payload}) => {
 
 const sequence = (state = new List(), {type, payload}) => {
     if (type === ActionTypes.BUILD_BOARD) {
-        return List.of(payload.boxId);
+        return List.of(payload.initialBoxId);
     }
     else if (type === ActionTypes.ADD_TO_SEQUENCE) {
-        return state.push(payload.boxId);
+        return state.push(payload.newBoxId);
     }
 
     return state;
 };
 
 const sequenceNo = (state = -1, {type}) => {
-    if (type === ActionTypes.NEXT_ACTIVE_BOX) {
-        return state + 1;
-    }
-    else if (type === ActionTypes.CLEAR_ACTIVE_BOX) {
+    if (type === ActionTypes.BUILD_BOARD || type === ActionTypes.CLEAR_ACTIVE_BOX) {
         return -1;
     }
+    else if (type === ActionTypes.NEXT_ACTIVE_BOX) {
+        return state + 1;
+    }
+
     return state;
 };
 
 const userSequence = (state = new List(), {type, payload}) => {
-    if (type === ActionTypes.ADD_TO_USER_SEQUENCE) {
+    if (type === ActionTypes.BUILD_BOARD) {
+        return new List();
+    }
+    else if (type === ActionTypes.ADD_TO_USER_SEQUENCE) {
         return state.push(payload.boxId);
     }
 
