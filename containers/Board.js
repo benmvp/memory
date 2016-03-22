@@ -1,5 +1,5 @@
 import './Board.scss';
-import {addToUserSequence, buildBoard, clearActiveBox, nextActiveBox} from '../actions';
+import {addToSequence, addToUserSequence, buildBoard, clearActiveBox, nextActiveBox, userTimeout} from '../actions';
 import Box from '../components/Box';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
@@ -7,9 +7,11 @@ import GameOver from '../components/GameOver';
 import {getUserSequenceMatches} from '../selectors';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import React from 'react';
+import StartGame from '../components/StartGame';
 
 class Board extends React.Component {
     static propTypes = {
+        addToSequence: React.PropTypes.func.isRequired,
         addToUserSequence: React.PropTypes.func.isRequired,
         boxes: ImmutablePropTypes.listOf(React.PropTypes.object).isRequired,
         buildBoard: React.PropTypes.func.isRequired,
@@ -19,8 +21,10 @@ class Board extends React.Component {
         nextActiveBox: React.PropTypes.func.isRequired,
         sequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
         sequenceNo: React.PropTypes.number.isRequired,
+        isUserTimeout: React.PropTypes.bool.isRequired,
         userSequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
-        userSequenceMatches: React.PropTypes.bool.isRequired
+        userSequenceMatches: React.PropTypes.bool.isRequired,
+        userTimeout: React.PropTypes.func.isRequired
     }
 
     state = {
@@ -39,8 +43,19 @@ class Board extends React.Component {
         }
     }
 
-    _onBoxSelect(boxNo, isPlaying) {
+    _handleBoxSelect(boxNo, isPlaying) {
         if (!isPlaying) {
+            clearTimeout(this._userTimeout);
+
+            this._userTimeout = setTimeout(() => {
+                if (this.props.sequence.size === this.props.userSequence.size) {
+                    this._playSequence();
+                }
+                else {
+                    this.props.userTimeout();
+                }
+            }, this.state.animTime * 2);
+
             this.props.addToUserSequence(boxNo);
         }
     }
@@ -61,9 +76,13 @@ class Board extends React.Component {
                     color={boxInfo.color}
                     isActive={boxNo === activeBoxNo}
                     isPlaying={isPlaying}
-                    onSelect={this._onBoxSelect.bind(this, boxNo, isPlaying)} />
+                    onSelect={this._handleBoxSelect.bind(this, boxNo, isPlaying)} />
             );
         });
+    }
+
+    _handleStart() {
+        this._playSequence();
     }
 
     _playSequence() {
@@ -76,8 +95,8 @@ class Board extends React.Component {
             }
         };
 
+        this.props.addToSequence(this.props.gridSize);
         this._playIntervalId = setInterval(next, this.state.animTime);
-        next();
     }
 
     _handleRestart() {
@@ -85,27 +104,31 @@ class Board extends React.Component {
     }
 
     render() {
-        let {boxes, gridSize, isPlaying, sequence, sequenceNo, userSequenceMatches} = this.props;
+        let {boxes, gridSize, isPlaying, sequence, sequenceNo, isUserTimeout, userSequenceMatches} = this.props;
         let boardClasses = classNames(
             'board',
             {
                 'board--playing': isPlaying
             }
         );
-        let playButtonProps = {
-            onClick: this._playSequence.bind(this)
-        };
-        let playButtonText = sequence.size <= 1 ? 'START!' : 'NEXT!';
-        let gameOverMessage;
+        let playButtonProps = {};
+        let startGameMessage, gameOverMessage;
 
         if (isPlaying) {
             playButtonProps.disabled = 'disabled';
         }
 
-        if (!userSequenceMatches) {
-            gameOverMessage = (
-                <GameOver onRestart={this._handleRestart.bind(this)} />
+        if (sequence.size < 1) {
+            startGameMessage = (
+                <StartGame onStart={this._handleStart.bind(this)} />
             );
+        }
+
+        if (!userSequenceMatches || isUserTimeout) {
+            gameOverMessage = (
+                <GameOver isUserTimeout={isUserTimeout} onRestart={this._handleRestart.bind(this)} />
+            );
+            clearTimeout(this._userTimeout);
         }
 
         return (
@@ -113,8 +136,9 @@ class Board extends React.Component {
                 <div className="board__boxes">
                     {this._getBoxes({boxes, gridSize, isPlaying, sequence, sequenceNo})}
                 </div>
-                <div className="board__actions">
-                    <button {...playButtonProps}>{playButtonText}</button>
+                {startGameMessage}
+                <div className="board__scoreboard">
+                    Sequence Count: {sequence.size}
                 </div>
                 {gameOverMessage}
             </div>
@@ -130,7 +154,14 @@ const mapStateToProps = (state) => ({
     userSequenceMatches: getUserSequenceMatches(state.sequence, state.userSequence)
 });
 
-const mapDispatchToProps = {addToUserSequence, buildBoard, clearActiveBox, nextActiveBox};
+const mapDispatchToProps = {
+    addToSequence,
+    addToUserSequence,
+    buildBoard,
+    clearActiveBox,
+    nextActiveBox,
+    userTimeout
+};
 
 export default connect(
     mapStateToProps,

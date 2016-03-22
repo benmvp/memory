@@ -5,14 +5,14 @@ $box-depressed-color: #000;
     border: 3px solid $box-border-color;
     border-radius: 10px;
     box-sizing: border-box;
-    opacity: .25;
+    opacity: .5;
     transition: opacity 200ms;
 
     &:not(.box--is-playing) {
         cursor: pointer;
 
         &:hover {
-            opacity: .5;
+            opacity: 1;
         }
 
         &:active {

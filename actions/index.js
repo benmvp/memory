@@ -4,6 +4,7 @@ export const ADD_TO_SEQUENCE = 'ADD_TO_SEQUENCE';
 export const NEXT_ACTIVE_BOX = 'NEXT_ACTIVE_BOX';
 export const CLEAR_ACTIVE_BOX = 'CLEAR_ACTIVE_BOX';
 export const ADD_TO_USER_SEQUENCE = 'ADD_TO_USER_SEQUENCE';
+export const USER_TIMEOUT = 'USER_TIMEOUT';
 
 // Helpers
 const randomBoxId = (gridSize) => Math.floor(Math.random() * gridSize ** 2);
@@ -37,4 +38,8 @@ export const addToUserSequence = (boxId) => ({
     payload: {
         boxId
     }
+});
+
+export const userTimeout = () => ({
+    type: USER_TIMEOUT
 });
