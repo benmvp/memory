@@ -28,7 +28,8 @@ class Board extends React.Component {
     }
 
     state = {
-        animTime: 1000 // To be configured in UI as "difficulty"
+        animTime: 1000, // To be configured in UI as "difficulty"
+        userWaitTime: 5000 // To be potentially configured in UI
     }
 
     componentDidUpdate() {
@@ -54,7 +55,7 @@ class Board extends React.Component {
                 else {
                     this.props.userTimeout();
                 }
-            }, this.state.animTime * 2);
+            }, this.state.userWaitTime);
 
             this.props.addToUserSequence(boxNo);
         }
