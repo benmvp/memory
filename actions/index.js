@@ -1,10 +1,12 @@
 // Action type constants
 export const BUILD_BOARD = 'BUILD_BOARD';
 export const ADD_TO_SEQUENCE = 'ADD_TO_SEQUENCE';
-export const NEXT_ACTIVE_BOX = 'NEXT_ACTIVE_BOX';
-export const CLEAR_ACTIVE_BOX = 'CLEAR_ACTIVE_BOX';
+export const SET_SEQUENCE_NO = 'SET_SEQUENCE_NO';
+export const CLEAR_SEQUENCE_NO = 'CLEAR_SEQUENCE_NO';
 export const ADD_TO_USER_SEQUENCE = 'ADD_TO_USER_SEQUENCE';
 export const USER_TIMEOUT = 'USER_TIMEOUT';
+export const SET_IS_PLAYING = 'SET_IS_PLAYING';
+export const CLEAR_IS_PLAYING = 'CLEAR_IS_PLAYING';
 
 // Helpers
 const randomBoxId = (gridSize) => Math.floor(Math.random() * gridSize ** 2);
@@ -25,12 +27,15 @@ export const addToSequence = (gridSize) => ({
     }
 });
 
-export const nextActiveBox = () => ({
-    type: NEXT_ACTIVE_BOX
+export const setSequenceNo = (sequenceNo) => ({
+    type: SET_SEQUENCE_NO,
+    payload: {
+        sequenceNo
+    }
 });
 
-export const clearActiveBox = () => ({
-    type: CLEAR_ACTIVE_BOX
+export const clearSequenceNo = () => ({
+    type: CLEAR_SEQUENCE_NO
 });
 
 export const addToUserSequence = (boxId) => ({
@@ -42,4 +47,12 @@ export const addToUserSequence = (boxId) => ({
 
 export const userTimeout = () => ({
     type: USER_TIMEOUT
+});
+
+export const setIsPlaying = () => ({
+    type: SET_IS_PLAYING
+});
+
+export const clearIsPlaying = () => ({
+    type: CLEAR_IS_PLAYING
 });

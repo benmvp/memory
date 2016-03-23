@@ -5,7 +5,7 @@ $box-depressed-color: #000;
     border: 3px solid $box-border-color;
     border-radius: 10px;
     box-sizing: border-box;
-    opacity: .5;
+    opacity: .25;
     transition: opacity 200ms;
 
     &:not(.box--is-playing) {

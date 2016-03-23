@@ -1,5 +1,5 @@
 import './Board.scss';
-import {addToSequence, addToUserSequence, buildBoard, clearActiveBox, nextActiveBox, userTimeout} from '../actions';
+import {addToSequence, addToUserSequence, buildBoard, clearIsPlaying, clearSequenceNo, setIsPlaying, setSequenceNo, userTimeout} from '../actions';
 import Box from '../components/Box';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
@@ -9,18 +9,22 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import React from 'react';
 import StartGame from '../components/StartGame';
 
+const animPauseTime = 500;
+
 class Board extends React.Component {
     static propTypes = {
         addToSequence: React.PropTypes.func.isRequired,
         addToUserSequence: React.PropTypes.func.isRequired,
         boxes: ImmutablePropTypes.listOf(React.PropTypes.object).isRequired,
         buildBoard: React.PropTypes.func.isRequired,
-        clearActiveBox: React.PropTypes.func.isRequired,
+        clearIsPlaying: React.PropTypes.func.isRequired,
+        clearSequenceNo: React.PropTypes.func.isRequired,
         gridSize: React.PropTypes.number.isRequired,
         isPlaying: React.PropTypes.bool.isRequired,
-        nextActiveBox: React.PropTypes.func.isRequired,
         sequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
         sequenceNo: React.PropTypes.number.isRequired,
+        setIsPlaying: React.PropTypes.func.isRequired,
+        setSequenceNo: React.PropTypes.func.isRequired,
         isUserTimeout: React.PropTypes.bool.isRequired,
         userSequence: ImmutablePropTypes.listOf(React.PropTypes.number).isRequired,
         userSequenceMatches: React.PropTypes.bool.isRequired,
@@ -29,19 +33,7 @@ class Board extends React.Component {
 
     state = {
         animTime: 1000, // To be configured in UI as "difficulty"
-        userWaitTime: 5000 // To be potentially configured in UI
-    }
-
-    componentDidUpdate() {
-        let {sequence, sequenceNo} = this.props;
-
-        if (sequenceNo < 0 || sequenceNo >= sequence.size) {
-            clearInterval(this._playIntervalId);
-
-            if (sequenceNo !== -1) {
-                this.props.clearActiveBox();
-            }
-        }
+        userWaitTime: 3000 // To be potentially configured in UI
     }
 
     _handleBoxSelect(boxNo, isPlaying) {
@@ -62,7 +54,7 @@ class Board extends React.Component {
     }
 
     _getBoxes({boxes, gridSize, isPlaying, sequence, sequenceNo}) {
-        let activeBoxNo = isPlaying ? sequence.get(sequenceNo) : -1;
+        let activeBoxNo = sequenceNo > -1 ? sequence.get(sequenceNo) : -1;
 
         return boxes.map((boxInfo, boxNo) => {
             let boxPercentage = 100 / gridSize;
@@ -87,17 +79,25 @@ class Board extends React.Component {
     }
 
     _playSequence() {
+        let sequenceNo = -1;
         let next = () => {
-            if (this.props.sequenceNo < (this.props.sequence.size - 1)) {
-                this.props.nextActiveBox();
-            }
-            else {
-                this.props.clearActiveBox();
-            }
+            this.props.clearSequenceNo();
+            setTimeout(() => {
+                if (sequenceNo < (this.props.sequence.size - 1)) {
+                    sequenceNo++;
+                    this.props.setSequenceNo(sequenceNo);
+                    setTimeout(next, this.state.animTime);
+                }
+                else {
+                    this.props.clearIsPlaying();
+                    this.props.clearSequenceNo();
+                }
+            }, animPauseTime);
         };
 
+        this.props.setIsPlaying();
         this.props.addToSequence(this.props.gridSize);
-        this._playIntervalId = setInterval(next, this.state.animTime);
+        next();
     }
 
     _handleRestart() {
@@ -151,7 +151,6 @@ class Board extends React.Component {
 const mapStateToProps = (state) => ({
     ...state,
     gridSize: Math.sqrt(state.boxes.size),
-    isPlaying: state.sequenceNo > -1,
     userSequenceMatches: getUserSequenceMatches(state.sequence, state.userSequence)
 });
 
@@ -159,8 +158,10 @@ const mapDispatchToProps = {
     addToSequence,
     addToUserSequence,
     buildBoard,
-    clearActiveBox,
-    nextActiveBox,
+    clearIsPlaying,
+    clearSequenceNo,
+    setIsPlaying,
+    setSequenceNo,
     userTimeout
 };
 
