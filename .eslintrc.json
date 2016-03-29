@@ -10,7 +10,9 @@
     "env": {
         "es6": true,
         "node": true,
-        "browser": true
+        "browser": true,
+        "jasmine": true,
+        "jest": true
     },
     "plugins": [
         "react"
@@ -24,17 +26,26 @@
         "arrow-spacing": 2,
         "brace-style": [2, "stroustrup"],
         "camelcase": 2,
+        "comma-dangle": 2,
+        "comma-spacing": 2,
         "curly": 2,
         "eqeqeq": [2, "smart"],
         "indent": 2,
         "key-spacing": 2,
+        "new-parens": 2,
         "newline-after-var": 2,
+        "no-multi-spaces": 2,
+        "no-native-reassign": 2,
         "no-param-reassign": 2,
         "no-shadow": 2,
         "no-use-before-define": 2,
         "no-var": 2,
+        "no-whitespace-before-property": 2,
         "object-curly-spacing": 2,
         "object-shorthand": 2,
+        "one-var-declaration-per-line": 2,
+        "operator-assignment": 2,
+        "operator-linebreak": [2, "before"],
         "prefer-arrow-callback": 2,
         "prefer-rest-params": 2,
         "prefer-spread": 2,
@@ -50,6 +61,7 @@
         "react/sort-comp": 2,
         "sort-imports": [2, {"ignoreCase": true}],
         "space-before-blocks": 2,
+        "space-before-function-paren": [2, "never"],
         "semi": 2
     }
 }
